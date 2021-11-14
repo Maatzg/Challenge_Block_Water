@@ -11,14 +11,15 @@
           echo "<br><h3>Resultado</h3>";
 
           for($l=0; $l<$_GET['cases']; $l++) {
+            //Limpando os array's a cada volta no laço
             unset($array1);
             unset($array2);
+            //Preenchendo array de blocos
             for($i=0; $i<$_GET['cols-'.($l+1)]; $i++) {
               $array1[] = $_GET[($l+1).'-'.($i+1)];
             }
-            //$array1 = [7, 10, 2, 5, 13, 3, 4, 1, 5, 9];
 
-            //pegar o maior valor do array
+            //Pegando o maior valor do array de blocos
             $bigger = $array1[0];
             for ($i=1; $i<count($array1); $i++) {
               if ($array1[$i]>$bigger) {
@@ -26,36 +27,36 @@
               }
             }
 
-            //Preencher todo o segundo array com água, no espaço que resta do primeiro array
+            //Preenchendo todo o segundo array com água, no espaço que resta do primeiro array
             for ($i=0; $i<count($array1); $i++) {
               $array2[] = $bigger - $array1[$i];
             }
 
-            //Percorrer níveis
+            //Percorrendo níveis, de cima para baixo
             for($i=$bigger; $i>0; $i--) {
-              $count = 0; //Contador de ocorrências em que um bloco preto é encontrado na linha
-              $firstPos = null; //Variável para guardar a primeira ocorrência de bloco preto na linha
-              $lastPos = null; //Variável para guardar a última ocorrência de bloco preto na linha
+              $count = 0; //Contador de ocorrências em que um bloco é encontrado na linha
+              $firstPos = null; //Variável para guardar a primeira ocorrência de bloco na linha
+              $lastPos = null; //Variável para guardar a última ocorrência de bloco na linha
 
-              //Percorrer arrays
+              //Percorrendo array de blocos
               for($j=0; $j<count($array1); $j++) {
-                if($array1[$j]>=$i) { //Testar se existe ocorrência de um bloco preto em cada posição
-                  $count++;
-                  if($firstPos===null) { //Testar se é a primeira ocorrência
+                if($array1[$j]>=$i) { //Testando se existe ocorrência de um bloco em cada posição percorrida
+                  $count++; //Contando ocorrências
+                  if($firstPos===null) { //Testando se é a primeira ocorrência
                     $firstPos = $j; //Primeira posição de ocorrência recebe a posição atual
                     $lastPos = $j; //Última posição de ocorrência recebe a posição atual
-                  } else if($j>$lastPos) { //Se já estiver preenchida, testar se posição de ocorrência atual é maior que a última posição
+                  } else if($j>$lastPos) { //Se não for a primeira ocorrência, testar se posição de ocorrência atual é maior que a última posição
                     $lastPos = $j; //Se for maior, a última posição passa a ser a posição atual
                   }
                 }
               }
 
-              //Após descobrir primeira e última ocorrência de blocos pretos em cada coluna, percorrer arrays de 10 posições novamente
+              //Após descobrir primeira e última ocorrência de blocos na linha atual, percorrer arrays novamente
               for ($k=0; $k<count($array1); $k++) {
                 if($array2[$k]!=0) { //Caso tenha algum nível de água no bloco atual...
-                  if($count<=1) { //Testar se houve apenas uma ou nenhuma ocorrência de blocos pretos
+                  if($count<=1) { //Testar se houve no máximo uma ocorrência de bloco
                     $array2[$k]--; //Diminui um nível de água em todas as posições (exceto na posição de ocorrência)
-                  } else if($count>=2) { //Testar se houve duas ou mais ocorrências de blocos pretos
+                  } else if($count>=2) { //Testar se houve duas ou mais ocorrências de blocos
                     if($k<$firstPos || $k>$lastPos) { //Se a posição atual for menor que a primeira posição de ocorrência, ou maior que a última...
                       $array2[$k]--; //Diminui um nível de água
                     }
@@ -64,7 +65,7 @@
               }
             }
 
-
+            //Imprimindo resultado na tela
             echo "<br><h5>" . ($l+1) . "º caso</h5><b>Blocos: ";
             for ($i=0; $i<count($array1); $i++) {
               echo $array1[$i] . " ";
